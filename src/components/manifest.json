@@ -1,7 +1,7 @@
 {
   "name": "يزن للأزياء",
   "short_name": "يزن",
-  "start_url": "/",
+  "start_url": "yazan-store-psi.vercel.app",
   "display": "standalone",
   "background_color": "#FFFFFF",
   "theme_color": "#000000",
