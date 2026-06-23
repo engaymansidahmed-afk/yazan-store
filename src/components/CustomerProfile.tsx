@@ -6,9 +6,11 @@
 import { useState, FormEvent } from "react";
 import { 
   User, MapPin, Ruler, ShoppingBag, Plus, Trash2, Edit2, 
-  Check, Award, AwardIcon, TrendingUp, Sparkles, MapPinCheck 
+  Check, Award, AwardIcon, TrendingUp, Sparkles, MapPinCheck,
+  Truck
 } from "lucide-react";
 import { SavedMeasurements, Address, UserProfile, TailoringOrder } from "../types";
+import TrackOrderModal from "./TrackOrderModal";
 
 interface CustomerProfileProps {
   userProfile: UserProfile;
@@ -30,6 +32,8 @@ export default function CustomerProfile({
   onSelectSavedMeasurement
 }: CustomerProfileProps) {
   const [activeTab, setActiveTab] = useState<"orders" | "measurements" | "addresses">("orders");
+  const [selectedTrackingOrder, setSelectedTrackingOrder] = useState<any | null>(null);
+  const [isTrackingModalOpen, setIsTrackingModalOpen] = useState(false);
   
   // States for adding new address
   const [showAddressForm, setShowAddressForm] = useState(false);
@@ -314,14 +318,28 @@ export default function CustomerProfile({
 
                       {/* Improved 4-Stage Visual Progress Tracker */}
                       <div className="bg-stone-50 p-5 rounded-xl border border-stone-100 space-y-4">
-                        <div className="flex justify-between items-center text-xs">
+                        <div className="flex justify-between items-center text-xs flex-wrap gap-2">
                           <span className="font-bold text-stone-700 flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
                             <span>تتبع مرحلة الطلب الحالية:</span>
                           </span>
-                          <span className="font-mono font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded border border-amber-200/50">
-                            {getStatusLabelAr(item.status)} ({getProgressPercentage(item.status)}%)
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <button
+                              id={`btn-track-order-modal-${o.id}`}
+                              onClick={() => {
+                                setSelectedTrackingOrder(o);
+                                setIsTrackingModalOpen(true);
+                              }}
+                              className="px-2.5 py-1.5 bg-stone-900 hover:bg-stone-800 text-white rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all shadow-sm shrink-0 cursor-pointer"
+                              type="button"
+                            >
+                              <Truck className="w-3.5 h-3.5 text-amber-500" />
+                              <span>تتبع تفصيلي مباشر</span>
+                            </button>
+                            <span className="font-mono font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded border border-amber-200/50">
+                              {getStatusLabelAr(item.status)} ({getProgressPercentage(item.status)}%)
+                            </span>
+                          </div>
                         </div>
 
                         {/* Beautiful Visual Progress Bar */}
@@ -746,6 +764,13 @@ export default function CustomerProfile({
           </div>
         )}
       </div>
+
+      {/* Interactive Track Order Modal Component */}
+      <TrackOrderModal
+        isOpen={isTrackingModalOpen}
+        onClose={() => setIsTrackingModalOpen(false)}
+        order={selectedTrackingOrder}
+      />
     </div>
   );
 }

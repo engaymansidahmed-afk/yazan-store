@@ -29,7 +29,60 @@ export default function App() {
 
   // Global State
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-  const [tailoringOrders, setTailoringOrders] = useState<any[]>([]);
+  const [tailoringOrders, setTailoringOrders] = useState<any[]>([
+    {
+      id: "YAZ-843029",
+      orderDate: "2026/06/23",
+      product: {
+        id: "prod-1",
+        name: "عباية مخملية سوداء مطرزة بالذهب",
+        nameEn: "Gold-Embroidered Black Velvet Abaya",
+        price: 850,
+        image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&q=80&w=600"
+      },
+      price: 850,
+      selectedSize: "M",
+      selectedColor: { name: "أسود ملكي", hex: "#0c0a09", nameEn: "Royal Black" },
+      quantity: 1,
+      paymentMethod: "أبل باي (Apple Pay)",
+      status: "ready",
+      progressPercentage: 100
+    },
+    {
+      id: "YAZ-583021",
+      orderDate: "2026/06/22",
+      price: 570,
+      paymentMethod: "بطاقة مدى البنكية",
+      status: "sewing",
+      progressPercentage: 65,
+      tailoring: {
+        id: "YAZ-583021",
+        customerName: "أيمن سيد أحمد",
+        productType: "ثوب رجالي سعودي فاخر",
+        designSource: "gallery",
+        fabric: {
+          id: "fab-3",
+          name: "القطن السويسري النقي المبرد",
+          nameEn: "Pure Swiss Cooled Cotton",
+          origin: "سويسرا",
+          image: "https://images.unsplash.com/photo-1582298538104-fc2d05527f14?auto=format&fit=crop&q=80&w=400"
+        },
+        color: { name: "أبيض ناصع", hex: "#fafaf9" },
+        measurements: {
+          id: "m-1",
+          height: 172,
+          shoulder: 44,
+          chest: 102,
+          waist: 88
+        },
+        status: "sewing",
+        progressPercentage: 65,
+        price: 570,
+        orderDate: "2026/06/22",
+        deliveryDate: "2026/06/26"
+      }
+    }
+  ]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [savedMeasurements, setSavedMeasurements] = useState<SavedMeasurements[]>(INITIAL_MEASUREMENTS);
   const [savedAddresses, setSavedAddresses] = useState<Address[]>(INITIAL_ADDRESSES);
