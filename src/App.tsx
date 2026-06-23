@@ -122,6 +122,13 @@ export default function App() {
   // Template to pass to tailoring studio when clicking "Tailor this design"
   const [tailoringTemplate, setTailoringTemplate] = useState<Product | null>(null);
 
+  // Admin Authentication States
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
+  const [showAdminLoginModal, setShowAdminLoginModal] = useState(false);
+  const [adminLoginEmail, setAdminLoginEmail] = useState("");
+  const [adminLoginPassword, setAdminLoginPassword] = useState("");
+  const [adminLoginError, setAdminLoginError] = useState("");
+
   // Cart animation & feedback states
   const [cartPulse, setCartPulse] = useState(false);
   const [toastNotification, setToastNotification] = useState<{ visible: boolean; message: string }>({
@@ -369,7 +376,7 @@ export default function App() {
                 { id: "catalog", label: "كتالوج الأزياء والعود" },
                 { id: "tailoring", label: "استوديو التفصيل والإنتاج" },
                 { id: "account", label: "حسابي والقياسات" },
-                { id: "admin", label: "إدارة المشغل والعمليات" }
+                ...(isAdminAuthenticated ? [{ id: "admin", label: "إدارة المشغل والعمليات" }] : [])
               ].map((tab) => (
                 <button
                   id={`nav-link-${tab.id}`}
@@ -453,7 +460,7 @@ export default function App() {
               { id: "catalog", label: "كتالوج الأزياء والعود" },
               { id: "tailoring", label: "استوديو التفصيل والإنتاج" },
               { id: "account", label: "حسابي والقياسات" },
-              { id: "admin", label: "إدارة المشغل والعمليات" }
+              ...(isAdminAuthenticated ? [{ id: "admin", label: "إدارة المشغل والعمليات" }] : [])
             ].map((tab) => (
               <button
                 id={`mobile-nav-link-${tab.id}`}
@@ -1077,13 +1084,93 @@ export default function App() {
 
         {/* TAB: ADMIN CONSOLE */}
         {activeTab === "admin" && (
-          <div className="space-y-6 animate-fade-in">
-            <AdminDashboard 
-              products={products}
-              tailoringOrders={tailoringOrders}
-              onAddProduct={handleAddProductAdmin}
-              onUpdateTailoringStatus={handleUpdateTailoringStatus}
-            />
+          <div className="space-y-6 animate-fade-in text-right">
+            {isAdminAuthenticated ? (
+              <AdminDashboard 
+                products={products}
+                tailoringOrders={tailoringOrders}
+                onAddProduct={handleAddProductAdmin}
+                onUpdateTailoringStatus={handleUpdateTailoringStatus}
+                onLogout={() => {
+                  setIsAdminAuthenticated(false);
+                  setActiveTab("home");
+                  triggerCartFeedback("تم تسجيل الخروج من لوحة التحكم بنجاح");
+                }}
+              />
+            ) : (
+              <div className="max-w-md mx-auto my-12 bg-[#F9F8F6] border border-[#1A1A1A]/15 shadow-2xl p-8 space-y-6">
+                <div className="text-center space-y-2">
+                  <div className="w-12 h-12 bg-amber-500/10 text-amber-600 rounded-full flex items-center justify-center mx-auto border border-amber-500/20">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
+                  <h3 className="font-serif text-xl font-black text-[#1A1A1A]">تسجيل الدخول للإدارة</h3>
+                  <p className="text-[11px] text-[#1A1A1A]/70 leading-relaxed font-sans">
+                    هذه المنطقة مخصصة لإدارة المشغل والمبيعات والعمليات لدار يزن.
+                  </p>
+                </div>
+
+                {adminLoginError && (
+                  <div className="p-3.5 bg-red-50 border border-red-200 text-red-700 text-xs font-sans font-bold">
+                    {adminLoginError}
+                  </div>
+                )}
+
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (adminLoginEmail.trim().toLowerCase() === "eng.aymansidahmed@gmail.com" && adminLoginPassword === "Aa1234567") {
+                      setIsAdminAuthenticated(true);
+                      setAdminLoginEmail("");
+                      setAdminLoginPassword("");
+                      setAdminLoginError("");
+                      triggerCartFeedback("تم تسجيل الدخول كمسؤول بنجاح! مرحباً بك.");
+                    } else {
+                      setAdminLoginError("البريد الإلكتروني أو كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى.");
+                    }
+                  }}
+                  className="space-y-4"
+                >
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] uppercase tracking-wider font-bold text-[#1A1A1A]/70 block font-sans">
+                      البريد الإلكتروني للمشرف
+                    </label>
+                    <input
+                      id="inline-admin-email"
+                      type="email"
+                      required
+                      placeholder="eng.aymansidahmed@gmail.com"
+                      value={adminLoginEmail}
+                      onChange={(e) => setAdminLoginEmail(e.target.value)}
+                      className="w-full px-3.5 py-2.5 border border-[#1A1A1A]/15 bg-white text-stone-900 focus:outline-none focus:border-[#C5A059] text-left text-xs font-sans"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] uppercase tracking-wider font-bold text-[#1A1A1A]/70 block font-sans">
+                      كلمة المرور
+                    </label>
+                    <input
+                      id="inline-admin-password"
+                      type="password"
+                      required
+                      placeholder="••••••••"
+                      value={adminLoginPassword}
+                      onChange={(e) => setAdminLoginPassword(e.target.value)}
+                      className="w-full px-3.5 py-2.5 border border-[#1A1A1A]/15 bg-white text-stone-900 focus:outline-none focus:border-[#C5A059] text-left text-xs font-sans"
+                    />
+                  </div>
+
+                  <button
+                    id="btn-inline-admin-login"
+                    type="submit"
+                    className="w-full py-3 bg-[#1A1A1A] hover:bg-[#333] text-white font-sans text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer mt-4"
+                  >
+                    <ShieldCheck className="w-4 h-4 text-[#C5A059]" />
+                    <span>دخول لوحة التحكم</span>
+                  </button>
+                </form>
+              </div>
+            )}
           </div>
         )}
 
@@ -1375,7 +1462,36 @@ export default function App() {
           <div className="space-y-3">
             <h4 className="font-serif text-[#1A1A1A] font-black text-sm uppercase tracking-wider">الهوية والشعار</h4>
             <span className="italic text-[#C5A059] font-serif text-sm block">"يزن... أناقة تُصنع خصيصًا لك"</span>
-            <p className="text-[#1A1A1A]/50 font-mono mt-2">© 2026 Yazan Fashion & Custom Tailoring. جميع الحقوق محفوظة.</p>
+            <div className="space-y-1 mt-2">
+              <p className="text-[#1A1A1A]/50 font-mono">© 2026 Yazan Fashion & Custom Tailoring. جميع الحقوق محفوظة.</p>
+              <div className="flex items-center gap-2">
+                <button
+                  id="admin-portal-footer-link"
+                  onClick={() => {
+                    if (isAdminAuthenticated) {
+                      setActiveTab("admin");
+                    } else {
+                      setShowAdminLoginModal(true);
+                    }
+                  }}
+                  className="text-[10px] text-stone-500 hover:text-[#C5A059] transition-colors cursor-pointer underline decoration-dotted font-sans"
+                >
+                  بوابة الإدارة والتحكم {isAdminAuthenticated ? "«نشط»" : "«مغلق»"}
+                </button>
+                {isAdminAuthenticated && (
+                  <button
+                    onClick={() => {
+                      setIsAdminAuthenticated(false);
+                      setActiveTab("home");
+                      triggerCartFeedback("تم تسجيل الخروج من لوحة الإدارة");
+                    }}
+                    className="text-red-500 hover:text-red-700 transition-colors text-[10px] font-bold cursor-pointer underline font-sans"
+                  >
+                    (تسجيل الخروج)
+                  </button>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </footer>
@@ -1391,6 +1507,99 @@ export default function App() {
           >
             <X className="w-3.5 h-3.5" />
           </button>
+        </div>
+      )}
+
+      {/* 6. ADMIN LOGIN MODAL */}
+      {showAdminLoginModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1A1A1A]/75 backdrop-blur-sm animate-fade-in text-right">
+          <div 
+            id="admin-login-modal"
+            className="w-full max-w-md bg-[#F9F8F6] border border-[#1A1A1A]/15 shadow-2xl overflow-hidden p-6 space-y-4 text-right"
+          >
+            <div className="flex justify-between items-center border-b border-[#1A1A1A]/10 pb-3">
+              <h3 className="font-serif text-lg font-black text-[#1A1A1A] w-full text-right">بوابة الإشراف والتحكم</h3>
+              <button 
+                id="close-admin-login"
+                onClick={() => {
+                  setShowAdminLoginModal(false);
+                  setAdminLoginEmail("");
+                  setAdminLoginPassword("");
+                  setAdminLoginError("");
+                }} 
+                className="p-1 text-[#1A1A1A]/50 hover:text-[#1A1A1A] transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-[#1A1A1A]/70 leading-relaxed font-sans text-right">
+              الرجاء إدخال البريد الإلكتروني وكلمة المرور للوصول الآمن إلى لوحة التحكم التنفيذية لدار يزن.
+            </p>
+
+            {adminLoginError && (
+              <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-sans rounded-none font-bold text-right">
+                {adminLoginError}
+              </div>
+            )}
+
+            <form 
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (adminLoginEmail.trim().toLowerCase() === "eng.aymansidahmed@gmail.com" && adminLoginPassword === "Aa1234567") {
+                  setIsAdminAuthenticated(true);
+                  setShowAdminLoginModal(false);
+                  setAdminLoginEmail("");
+                  setAdminLoginPassword("");
+                  setAdminLoginError("");
+                  setActiveTab("admin");
+                  triggerCartFeedback("تم تسجيل الدخول كمسؤول بنجاح! مرحباً بك.");
+                } else {
+                  setAdminLoginError("البريد الإلكتروني أو كلمة المرور غير صحيحة، يرجى المحاولة مرة أخرى.");
+                }
+              }}
+              className="space-y-4 text-right"
+            >
+              <div className="space-y-1.5 text-right">
+                <label className="text-[10px] uppercase tracking-wider font-bold text-[#1A1A1A]/70 block font-sans">
+                  البريد الإلكتروني
+                </label>
+                <input
+                  id="admin-login-email"
+                  type="email"
+                  required
+                  placeholder="eng.aymansidahmed@gmail.com"
+                  value={adminLoginEmail}
+                  onChange={(e) => setAdminLoginEmail(e.target.value)}
+                  className="w-full px-3.5 py-2.5 border border-[#1A1A1A]/15 bg-white text-stone-900 focus:outline-none focus:border-[#C5A059] text-left text-xs font-sans"
+                />
+              </div>
+
+              <div className="space-y-1.5 text-right">
+                <label className="text-[10px] uppercase tracking-wider font-bold text-[#1A1A1A]/70 block font-sans">
+                  كلمة المرور
+                </label>
+                <input
+                  id="admin-login-password"
+                  type="password"
+                  required
+                  placeholder="••••••••"
+                  value={adminLoginPassword}
+                  onChange={(e) => setAdminLoginPassword(e.target.value)}
+                  className="w-full px-3.5 py-2.5 border border-[#1A1A1A]/15 bg-white text-stone-900 focus:outline-none focus:border-[#C5A059] text-left text-xs font-sans"
+                />
+              </div>
+
+              <button
+                id="btn-submit-admin-login"
+                type="submit"
+                className="w-full py-3 bg-[#1A1A1A] hover:bg-[#333] text-white font-sans text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-1.5 transition-all cursor-pointer mt-4"
+              >
+                <ShieldCheck className="w-4 h-4 text-[#C5A059]" />
+                <span>تسجيل دخول المسؤولين</span>
+              </button>
+            </form>
+          </div>
         </div>
       )}
 

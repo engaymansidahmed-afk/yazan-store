@@ -19,13 +19,15 @@ interface AdminDashboardProps {
   tailoringOrders: any[];
   onAddProduct: (newProduct: Product) => void;
   onUpdateTailoringStatus: (id: string, newStatus: any) => void;
+  onLogout?: () => void;
 }
 
 export default function AdminDashboard({
   products,
   tailoringOrders,
   onAddProduct,
-  onUpdateTailoringStatus
+  onUpdateTailoringStatus,
+  onLogout
 }: AdminDashboardProps) {
   // Navigation & UI States
   const [activeTab, setActiveTab] = useState<"dashboard" | "catalog" | "orders" | "crm" | "marketing" | "roles">("dashboard");
@@ -267,6 +269,19 @@ export default function AdminDashboard({
 
         {/* TOP CONFIG BAR: MODE SELECTOR & ROLE SWITCHER */}
         <div className="flex items-center flex-wrap gap-3">
+          {/* Logout Button */}
+          {onLogout && (
+            <button
+              id="btn-admin-logout"
+              onClick={onLogout}
+              className="p-2.5 rounded-xl border border-red-200 bg-red-50 text-red-700 hover:bg-red-100 flex items-center gap-1.5 text-xs font-bold cursor-pointer transition-all"
+              title="تسجيل الخروج من الإدارة"
+            >
+              <ShieldAlert className="w-4 h-4 text-red-600" />
+              <span>تسجيل الخروج</span>
+            </button>
+          )}
+
           {/* Light/Dark mode toggler */}
           <button
             id="btn-admin-theme-toggle"
