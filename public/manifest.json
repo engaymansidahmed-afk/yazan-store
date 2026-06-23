@@ -1,0 +1,24 @@
+{
+  "short_name": "دار يزن",
+  "name": "منصة يزن للأزياء والتفصيل حسب الطلب",
+  "description": "منصة رقمية متكاملة لبيع الملابس الجاهزة وتصميم الأزياء والتفصيل حسب الطلب مع مساعد المقاسات والتسوق الذكي المدعوم بالذكاء الاصطناعي",
+  "icons": [
+    {
+      "src": "/icons/yazan-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/yazan-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F9F8F6",
+  "theme_color": "#1A1A1A",
+  "display": "standalone",
+  "orientation": "portrait"
+}
