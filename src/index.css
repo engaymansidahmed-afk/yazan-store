@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Tajawal", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Amiri", "Playfair Display", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --color-editorial-bg: #F9F8F6;
+  --color-editorial-dark: #1A1A1A;
+  --color-editorial-gold: #C5A059;
+  --color-editorial-sand: #E5E2DA;
+}
+
+/* Custom styles for luxury appearance */
+@layer base {
+  body {
+    @apply font-sans antialiased text-editorial-dark bg-editorial-bg selection:bg-editorial-gold/20 selection:text-editorial-dark;
+  }
+}
+
+.luxury-text-glow {
+  text-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #E5E2DA;
+  border-radius: 2px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #C5A059;
+}
+
+/* Editorial aesthetic layout helpers */
+.editorial-card {
+  @apply bg-white border border-editorial-dark/10 shadow-sm transition-all duration-300;
+}
+
+.editorial-divider {
+  @apply border-b border-editorial-dark/10;
+}
+
+.editorial-btn-primary {
+  @apply bg-editorial-dark text-white font-sans text-xs uppercase tracking-[0.2em] font-medium py-3 px-6 hover:bg-editorial-dark/90 transition-all duration-200;
+}
+
+.editorial-btn-secondary {
+  @apply border border-editorial-dark text-editorial-dark font-sans text-xs uppercase tracking-[0.2em] font-medium py-3 px-6 hover:bg-editorial-dark hover:text-white transition-all duration-200;
+}
+
+@keyframes cart-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.35); filter: brightness(1.2); }
+  100% { transform: scale(1); }
+}
+
+.animate-cart-pulse {
+  animation: cart-pulse 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes toast-slide-in {
+  0% { transform: translateY(1.5rem); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.animate-toast-slide-in {
+  animation: toast-slide-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+

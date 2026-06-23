@@ -1,0 +1,6 @@
+{
+  "name": "منصة يزن للأزياء والتفصيل",
+  "description": "منصة رقمية متكاملة لبيع الملابس الجاهزة وتصميم الأزياء والتفصيل حسب الطلب مع مساعد المقاسات والتسوق الذكي المدعوم بالذكاء الاصطناعي",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
